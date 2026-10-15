@@ -1,76 +1,78 @@
 # usage-pane
 
-Claude Code 화면에 **토큰 사용량 · 사용 한도 남은 % · 모델/계산량(effort) 선택기**를 보여 주는 패널(mod)입니다.
+**English** · [한국어](README.ko.md)
 
-## 무엇을 보여주나요
+A Claude Code mod that shows **token usage, remaining usage-limit %, and model/effort pickers** in a pane.
 
-| 영역 | 내용 |
+## What it shows
+
+| Section | Content |
 | --- | --- |
-| 현재 세션 토큰 | 입력 / 출력 / 캐시 읽기 / 캐시 쓰기 / 합계, 누적 비용(USD), 컨텍스트 사용량 바 |
-| 사용 한도 | 5시간 · 주간(7일) · 지출 한도의 사용 바, **남은 %**, 리셋까지 남은 시간. 주간 한도가 90% 이상 소진되면 경고 표시 |
-| 모델 · 계산량 | 최근 응답 모델 표시, Model / Effort 선택기 (다음 요청부터 적용) |
+| Session tokens | Input / output / cache read / cache write / total, running cost (USD), and a context-usage bar |
+| Usage limits | Usage bars for the 5-hour, weekly (7-day) and spend limits, with **remaining %** and time until reset. A warning appears once the weekly limit is 90% used |
+| Model / effort | The model of the latest response, plus Model and Effort pickers (applied from the next request) |
 
-색상은 사용률에 따라 바뀝니다: 70% 미만 초록, 70% 이상 노랑, 90% 이상 빨강.
+Colors follow usage: green below 70%, yellow from 70%, red from 90%.
 
-## 설치
+## Install
 
-Claude Code 안에서:
+Inside Claude Code:
 
 ```
 /plugin install usage-pane --marketplace RicoKim328/claude-usage-pane
 ```
 
-설치된 mod가 로드되면 대화형 세션 시작 시 패널이 자동으로 열립니다. 열리지 않으면 `/usage`를 실행하세요.
+Once the mod is loaded, the pane opens automatically when an interactive session starts. If it doesn't, run `/usage`.
 
-### 설치 없이 로컬에서 먼저 써 보기
+### Try it locally without installing
 
 ```bash
 git clone https://github.com/RicoKim328/claude-usage-pane.git
 claude --plugin-dir ./claude-usage-pane
 ```
 
-## 사용법
+## Usage
 
-| 명령 | 동작 |
+| Command | What it does |
 | --- | --- |
-| `/usage` | 패널을 고정(pin)하고 엽니다. 다음 세션부터도 자동으로 열립니다. |
-| `/usage off` | 고정을 해제하고 패널을 닫습니다. |
+| `/usage` | Pins the pane and opens it. It also opens automatically in later sessions. |
+| `/usage off` | Unpins the pane and closes it. |
 
-- 패널의 닫기 표시로 직접 닫아도 고정이 해제되어, 다음 세션에서도 닫힌 채로 시작합니다.
-- 고정 상태는 세션이 바뀌어도 유지됩니다.
+- Closing the pane with its close mark also unpins it, so it stays closed next session.
+- The pinned state is kept across sessions.
 
-### 모델 / Effort 바꾸기
+### Changing model / effort
 
-패널 하단의 **Model**, **Effort** 선택기에서 고르면 이후 메인 대화의 모든 요청에 적용됩니다.
+Pick a value in the **Model** or **Effort** selector at the bottom of the pane. It applies to every main-conversation request from then on.
 
 - Model: `session default`, Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5
 - Effort: `session default`, low, medium, high, xhigh, max
-- `session default`를 고르면 이 mod는 아무것도 덮어쓰지 않고 세션 원래 설정을 그대로 씁니다.
-- 서브에이전트의 요청에는 적용되지 않습니다.
-- Effort는 해당 요청이 effort 설정을 가진 경우에만 덮어씁니다.
+- With `session default` the mod overrides nothing and the session's own setting is used.
+- Subagent requests are not affected.
+- Effort is overridden only on requests that carry an effort setting.
 
-## 알아둘 점
+## Good to know
 
-- **패널 위치**: 오른쪽 도킹은 전체화면 레이아웃(`CLAUDE_CODE_NO_FLICKER=1`)에서만 됩니다. 그 외에는 프롬프트 위에 표시됩니다.
-- **좁은 터미널**: 패널이 들어갈 자리가 없거나 고정을 해제했을 때는 상태 표시줄에 `주간 (7일) NN% 남음` 같은 요약이 대신 나옵니다.
-- **사용 한도**는 구독 계정에서만 측정됩니다. API 키로 쓰면 "아직 측정값 없음"이 표시되고, 값은 첫 응답 이후부터 채워집니다.
-- 토큰 합계는 **이 mod가 켜진 이후 메인 대화**의 누적값입니다. 서브에이전트 토큰은 포함되지 않습니다.
-- 패널의 문구는 한국어입니다.
+- **Pane position:** docking on the right works only in the fullscreen layout (`CLAUDE_CODE_NO_FLICKER=1`). Otherwise the pane sits above the prompt.
+- **Narrow terminals:** when there is no room for the pane, or it is unpinned, a summary such as `주간 (7일) 42% 남음` ("weekly (7-day) 42% left") is shown in the status line instead.
+- **Usage limits** are measured for subscription accounts only. With an API key the pane shows "no measurement yet", and values fill in after the first response.
+- The token total is the running sum of the **main conversation since the mod was enabled**. Subagent tokens are not included.
+- The pane's labels and the status-line summary are currently in Korean.
 
-## 개발
+## Development
 
 ```bash
-claude plugin validate .    # 매니페스트와 훅 검사
-claude plugin test .        # tests/usage.test.ts 실행
+claude plugin validate .    # check the manifest and hooks
+claude plugin test .        # run tests/usage.test.ts
 ```
 
-파일 구성:
+Layout:
 
 ```
-.claude-plugin/plugin.json        mod 정보
-.claude-plugin/marketplace.json   마켓플레이스 정보
-hooks/hooks.json                  훅 모듈 경로
-hooks/register.tsx                패널과 훅 구현
-types/index.d.ts                  $.state 타입 계약
-tests/usage.test.ts               테스트
+.claude-plugin/plugin.json        mod info
+.claude-plugin/marketplace.json   marketplace info
+hooks/hooks.json                  hooks module path
+hooks/register.tsx                pane and hooks implementation
+types/index.d.ts                  $.state type contract
+tests/usage.test.ts               tests
 ```
