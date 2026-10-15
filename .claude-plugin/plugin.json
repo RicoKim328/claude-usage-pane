@@ -1,0 +1,9 @@
+{
+  "name": "usage-pane",
+  "version": "0.1.0",
+  "description": "Right pane with token usage, weekly limit remaining %, and model/effort pickers",
+  "types": "./types/index.d.ts",
+  "author": {
+    "name": "rico"
+  }
+}

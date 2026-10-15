@@ -1,0 +1,5 @@
+{
+  "name": "rico-mods",
+  "owner": { "name": "rico" },
+  "plugins": [{ "name": "usage-pane", "source": "./" }]
+}
