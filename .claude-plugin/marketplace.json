@@ -1,5 +1,6 @@
 {
   "name": "rico-mods",
+  "description": "Claude Code mods by rico, including usage-pane: a right pane with token usage, weekly limit remaining %, and model/effort pickers",
   "owner": { "name": "rico" },
   "plugins": [{ "name": "usage-pane", "source": "./" }]
 }
